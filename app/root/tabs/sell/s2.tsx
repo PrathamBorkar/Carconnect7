@@ -1,165 +1,230 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, CheckBox, Button, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function VehicleDetailsForm() {
-    const [isChecked, setChecked] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
+export default function VehicleDetailsForm({ setVehicleData }) {
+  const [model, setModel] = useState('');
+  const [year, setYear] = useState('');
+  const [price, setPrice] = useState('');
+  const [ownerNO, setOwnerNO] = useState('');
+  const [transmission, setTransmission] = useState('');
+  const [fuelType, setFuelType] = useState('');
+  const [seats, setSeats] = useState('');
+  const [askableprice, setAskableprice] = useState('');
+  const [description, setDescription] = useState('');
+  const [images, setImages] = useState([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-    // Function to handle image selection
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+  const handleImagePick = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status === 'granted') {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-        if (!result.canceled) {
-            setSelectedImage(result.uri);
-        }
+      if (!result.cancelled) {
+        setImages([...images, result.uri]);
+      }
+    }
+  };
+
+  const handleSubmit = () => {
+    const vehicleData = {
+      model,
+      year,
+      price,
+      ownerNO,
+      transmission,
+      fuelType,
+      seats,
+      askableprice,
+      description,
+      images,
     };
 
-    return (
-        <ScrollView contentContainerStyle={styles.container}>
-            {/* Header Section */}
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Enter more details about vehicle</Text>
-            </View>
+    setVehicleData(vehicleData);
+    setIsSubmitted(true);
+  };
 
-            {/* Form Inputs */}
-            <View style={styles.formContainer}>
-                <TextInput style={styles.input} placeholder="Car Model" />
-                <TextInput style={styles.input} placeholder="Year" keyboardType="number-pad" />
-                <TextInput style={styles.input} placeholder="No. of owners" keyboardType="number-pad" />
-                <TextInput style={styles.input} placeholder="Vehicle Identification Number (VIN)" />
-                <TextInput style={styles.input} placeholder="VIN" />
-                <TextInput style={styles.input} placeholder="Fuel Type" />
-                <TextInput style={styles.input} placeholder="Transmission" />
-                <TextInput style={styles.input} placeholder="No. of seats" keyboardType="number-pad" />
-                <TextInput style={styles.input} placeholder="Askable price" keyboardType="decimal-pad" />
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.header}>Vehicle Details</Text>
 
-                {/* Upload Image Section */}
-                <Text style={styles.uploadText}>Upload image upto 1MB</Text>
-                <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-                    <Text style={styles.uploadButtonText}>+</Text>
-                </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Model:</Text>
+          <TextInput
+            style={styles.input}
+            value={model}
+            onChangeText={setModel}
+          />
+        </View>
 
-                {selectedImage && (
-                    <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-                )}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Year:</Text>
+          <TextInput
+            style={styles.input}
+            value={year}
+            onChangeText={setYear}
+          />
+        </View>
 
-                {/* Terms and Conditions */}
-                <View style={styles.termsContainer}>
-                    <CheckBox value={isChecked} onValueChange={setChecked} />
-                    <Text style={styles.termsText}>I accept the terms</Text>
-                </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Price:</Text>
+          <TextInput
+            style={styles.input}
+            value={price}
+            onChangeText={setPrice}
+          />
+        </View>
 
-                <TouchableOpacity onPress={() => { /* Navigate to Terms */ }}>
-                    <Text style={styles.tcLink}>Read our T&Cs</Text>
-                </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Owner Number:</Text>
+          <TextInput
+            style={styles.input}
+            value={ownerNO}
+            onChangeText={setOwnerNO}
+          />
+        </View>
 
-                <TouchableOpacity style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Save</Text>
-            </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Transmission:</Text>
+          <TextInput
+            style={styles.input}
+            value={transmission}
+            onChangeText={setTransmission}
+          />
+        </View>
 
-            </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Fuel Type:</Text>
+          <TextInput
+            style={styles.input}
+            value={fuelType}
+            onChangeText={setFuelType}
+          />
+        </View>
 
-            {/* Submit Button */}
-            
-        </ScrollView>
-    );
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Seats:</Text>
+          <TextInput
+            style={styles.input}
+            value={seats}
+            onChangeText={setSeats}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Askable Price:</Text>
+          <TextInput
+            style={styles.input}
+            value={askableprice}
+            onChangeText={setAskableprice}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Description:</Text>
+          <TextInput
+            style={styles.input}
+            value={description}
+            onChangeText={setDescription}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Images:</Text>
+          <TouchableOpacity onPress={handleImagePick}>
+            <Text style={styles.input}>Pick Images</Text>
+          </TouchableOpacity>
+          {images.map((image, index) => (
+            <Image key={index} source={{ uri: image }} style={styles.image} />
+          ))}
+        </View>
+
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitButtonText}>
+            {isSubmitted ? 'Saved Successfully' : 'Save'}
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexGrow: 1,
-        padding: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F7F9FC',
-    },
-    header: {
-        backgroundColor: '#A7C7E7',
-        width: '100%',
-        paddingVertical: 15,
+  container: {
+    flex: 1,
+    backgroundColor: '#F1F3FB',
+    borderRadius: 10,
+    width: '80%',
+    borderWidth: 2,
+    borderColor: "#6f5ef1",
+    padding: 20,
+    marginTop:20,
+    alignSelf:"center"
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    marginBottom: 20,
+    backgroundColor:""
+  },
+  inputLabel: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 10,
+    fontSize: 16,
+  },
+  image: {
+ width: 100,
+    height: 100,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  submitButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 10,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+    headerContainer: {
+        backgroundColor: '#A6C7FF',
         borderRadius: 10,
-        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
         marginBottom: 20,
+        width: '100%',
+        alignItems: 'center',
     },
     headerText: {
-        color: '#black',
         fontSize: 18,
         fontWeight: 'bold',
+        color: 'black',
     },
     formContainer: {
-        width: '100%',
         backgroundColor: '#F1F3FB',
-        padding: 20,
         borderRadius: 10,
-        borderColor: '#6f5ef1',
-        borderWidth: 2,
-    },
-    input: {
-        borderColor: '#D3D3D3',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        marginBottom: 15,
-        backgroundColor: '#F7F9FC',
-    },
-    uploadText: {
-        marginBottom: 5,
-        fontSize: 14,
-        color: '#4A4A4A',
-    },
-    uploadButton: {
-        borderColor: '#007AFF',
-        borderWidth: 1,
-        borderRadius: 8,
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 15,
-    },
-    uploadButtonText: {
-        fontSize: 24,
-        color: '#007AFF',
-    },
-    imagePreview: {
-        width: 100,
-        height: 100,
-        marginBottom: 15,
-    },
-    termsContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    termsText: {
-        marginLeft: 10,
-        fontSize: 14,
-        color: '#4A4A4A',
-    },
-    tcLink: {
-        color: '#007AFF',
-        fontSize: 14,
-        marginBottom: 20,
-    },
-    submitButton: {
-        backgroundColor: '#4A90E2',
-        paddingVertical: 15,
-        paddingHorizontal: 80,
-        borderRadius: 25,
-        marginTop: 20,
-    },
-    submitButtonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign :"center"
+        padding: 20,
+        width: '100%',
+        borderWidth:2,
+        borderColor:"#6f5ef1"
     },
 });
-

@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const profile = () => {
+const Profile = () => {
+  const [userData, setUserData] = useState(null);
+
+  // Function to fetch data from server
+  const getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await axios.post("http://localhost:8082/userdata", { token });
+      setUserData(response.data.data); // Assuming data is returned in response.data.data
+    } catch (error) {
+      console.error("Error fetching user data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  if (!userData) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -13,15 +40,10 @@ const profile = () => {
 
       {/* Profile Section */}
       <View style={styles.profile}>
-        <Image
-          style={styles.profileImage}
-          source={{
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_bkm4G3VJ7HnDZr-LHhVsu-zWc0bbz9EVg&s',
-          }}
-        />
-        <Text style={styles.profileName}>Pratham</Text>
-        <Text style={styles.profileDetails}>9370063183</Text>
-        <Text style={styles.profileDetails}>PLemmwe@gmail.com</Text>
+        <Image source={require('../../assets/images/pi.png')} style={styles.profileImage} />
+        <Text style={styles.profileName}>{userData.name}</Text>
+        <Text style={styles.profileDetails}>{userData.mobile}</Text>
+        <Text style={styles.profileDetails}>{userData.email}</Text>
       </View>
 
       {/* Menu Section */}
@@ -88,7 +110,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     margin: 20,
     borderRadius: 10,
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Use shadow for iOS, elevation for Android
     elevation: 4, // For Android shadow
   },
   menuItem: {
@@ -121,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default profile;
+export default Profile;

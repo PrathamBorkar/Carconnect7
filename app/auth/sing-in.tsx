@@ -3,6 +3,7 @@ import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, View, TouchableO
 import { useRouter } from "expo-router";
 import axios from "axios"; // Import axios
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -31,7 +32,9 @@ const SignIn = () => {
 
       if (response.data.status === "ok") {
         Alert.alert("Success", "Login successful!");
-        router.push("/root/tabs/homescreen");
+        await AsyncStorage.setItem("token", response.data.data);
+        AsyncStorage.setItem("Isloggedin",JSON.stringify(true));
+        router.push("/root/tabs/profile");
       } else {
         setErrorMessage(response.data.data || "Invalid credentials.");
       }
@@ -100,7 +103,7 @@ const SignIn = () => {
         {errorMessage ? (
           <Text style={{ color: "red", textAlign: "center", marginTop: 20 }}>{errorMessage}</Text>
         ) : null}
-       <View style={styles.fp}><Text>Or</Text></View>
+        <View style={styles.fp}><Text>Or</Text></View>
         <TouchableOpacity style={styles.but} onPress={() => console.log("Sign In with Google")}>
           <Ionicons name="logo-google" size={24} color="#fff" style={styles.l} />
           <Text style={styles.butText}>Login with Google</Text>
@@ -149,77 +152,64 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: "bold",
   },
   subHeaderText: {
-    color: "#858585",
-    marginTop: 5,
-    textAlign: 'center',
+    textAlign: "center",
+    color: "gray",
   },
   inputField: {
     marginVertical: 10,
-    backgroundColor: "#fff",
-    borderRadius: 5,
   },
   textInput: {
-    height: 50,
-    borderColor: "#021010",
     borderWidth: 1,
-    paddingHorizontal: 10,
-    marginVertical: 5,
-    borderRadius: 100,
-    backgroundColor:"#e4e6e6"
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
   },
   button: {
-    backgroundColor: "#24b0f4",
+    backgroundColor: "#1a75ff",
     padding: 15,
-    borderRadius: 50,
+    borderRadius: 5,
     alignItems: "center",
     marginTop: 20,
-    elevation: 8,
   },
   buttonText: {
     color: "white",
-    fontSize: 16,
     fontWeight: "bold",
+  },
+  fp: {
+    marginTop: 10,
+    alignItems: "center",
+  },
+  but: {
+    backgroundColor: "#ff5252",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  butText: {
+    color: "white",
+    marginLeft: 10,
   },
   signupContainer: {
     marginTop: 20,
     alignItems: "center",
   },
   signupText: {
-    fontSize: 16,
-    color: "#858585",
+    color: "gray",
   },
   signupLink: {
-    color: "#6200ee",
+    color: "#1a75ff",
     fontWeight: "bold",
   },
-  but: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "green",
-    borderRadius: 50,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    marginVertical: 10,
-     
+  l: {
+    marginRight: 5,
   },
-  butText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft:5,
-    alignContent:"center",
-  },
-  fp: {
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  l:{
-    marginLeft:70,
-  }
 });
 
 export default SignIn;

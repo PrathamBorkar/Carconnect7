@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'; // Type-safe navigation hook
 import Swiper from 'react-native-swiper'; // Import Swiper for auto image slider
 import sell from './sell';
+import BuyCar from './Buy/b1';
 import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
@@ -53,7 +54,7 @@ export default function HomeScreen() {
           <Image source={require('../../assets/images/sell.png')} style={styles.gridIconFull} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('BuyCar')}>
+        <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('Buy')}>
           <Image source={require('../../assets/images/BUY.png')} style={styles.gridIconFull} />
         </TouchableOpacity>
 

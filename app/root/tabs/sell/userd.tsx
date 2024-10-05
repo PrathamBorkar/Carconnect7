@@ -1,91 +1,73 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, CheckBox, Linking, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, CheckBox } from 'react-native';
 
-export default function OwnerInfoForm() {
-    const [termsAccepted, setTermsAccepted] = useState(false);
-    const [formData, setFormData] = useState({
-        ownerName: '',
-        contactNumber: '',
-        emailAddress: '',
-        adhaarNumber: '',
-        whatsappNumber: '',
-        ownerComments: ''
-    });
+export default function OwnerInfoForm({ setOwnerData }) {
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [formData, setFormData] = useState({
+    ownerName: '',
+    adhaarNumber: '',
+    whatsappNumber: '',
+    ownerComments: '',
+  });
 
-    const handleInputChange = (field, value) => {
-        setFormData({ ...formData, [field]: value });
-    };
+  const handleInputChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+    setOwnerData({ ...formData, [field]: value });
+  };
 
-    return (
-        <ScrollView contentContainerStyle={styles.container}>
-            {/* Form Header */}
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Owners Information</Text>
-            </View>
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Owner Information</Text>
+      </View>
 
-            {/* Input Fields */}
-            <View style={styles.formContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Owners Name"
-                    value={formData.ownerName}
-                    onChangeText={(value) => handleInputChange('ownerName', value)}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Contact Number"
-                    value={formData.contactNumber}
-                    onChangeText={(value) => handleInputChange('contactNumber', value)}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email Address"
-                    value={formData.emailAddress}
-                    onChangeText={(value) => handleInputChange('emailAddress', value)}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Adhaar Number"
-                    value={formData.adhaarNumber}
-                    onChangeText={(value) => handleInputChange('adhaarNumber', value)}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Whatsapp Number"
-                    value={formData.whatsappNumber}
-                    onChangeText={(value) => handleInputChange('whatsappNumber', value)}
-                />
+      <View style={styles.formContainer}>
+        {/* Owner Name Input */}
+        <TextInput
+          style={styles.input}
+          placeholder="Owner Name"
+          value={formData.ownerName}
+          onChangeText={(value) => handleInputChange('ownerName', value)}
+        />
 
-                {/* Terms and Conditions */}
-                <View style={styles.checkboxContainer}>
-                    <CheckBox
-                        value={termsAccepted}
-                        onValueChange={setTermsAccepted}
-                    />
-                    <Text style={styles.checkboxLabel}>I accept the terms</Text>
-                </View>
+        {/* Aadhaar Number Input */}
+        <TextInput
+          style={styles.input}
+          placeholder="Aadhaar Number"
+          value={formData.adhaarNumber}
+          onChangeText={(value) => handleInputChange('adhaarNumber', value)}
+        />
 
-                <TouchableOpacity onPress={() => Linking.openURL('https://example.com/terms')}>
-                    <Text style={styles.termsText}>Read our T&Cs</Text>
-                </TouchableOpacity>
+        {/* WhatsApp Number Input */}
+        <TextInput
+          style={styles.input}
+          placeholder="WhatsApp Number"
+          value={formData.whatsappNumber}
+          onChangeText={(value) => handleInputChange('whatsappNumber', value)}
+        />
 
-                {/* Comments */}
-                <TextInput
-                    style={styles.commentInput}
-                    placeholder="Owners comments"
-                    value={formData.ownerComments}
-                    onChangeText={(value) => handleInputChange('ownerComments', value)}
-                    multiline
-                />
+        {/* Optional Owner Comments Input */}
+        <TextInput
+          style={styles.commentInput}
+          placeholder="Owner Comments (Optional)"
+          value={formData.ownerComments}
+          onChangeText={(value) => handleInputChange('ownerComments', value)}
+          multiline
+        />
 
-                {/* Submit Button */}
-                <TouchableOpacity style={styles.submitButton}>
-                    <Text style={styles.submitButtonText}>Save</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
-    );
+        {/* Terms Acceptance Checkbox */}
+        <View style={styles.checkboxContainer}>
+          <CheckBox value={termsAccepted} onValueChange={setTermsAccepted} />
+          <Text style={styles.checkboxLabel}>I accept the terms</Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
 }
+
+
+
+
 
 const styles = StyleSheet.create({
     container: {
