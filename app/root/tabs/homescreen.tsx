@@ -50,7 +50,7 @@ export default function HomeScreen() {
 
       {/* Feature Grid */}
       <View style={styles.gridContainer}>
-        <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('sell')}>
+        <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('Sell')}>
           <Image source={require('../../assets/images/sell.png')} style={styles.gridIconFull} />
         </TouchableOpacity>
 

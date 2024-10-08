@@ -161,17 +161,18 @@ const styles = StyleSheet.create({
   },
   inputField: {
     marginVertical: 10,
+    
   },
   textInput: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 20,
     padding: 10,
   },
   button: {
     backgroundColor: "#1a75ff",
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 20,
     alignItems: "center",
     marginTop: 20,
   },
@@ -184,21 +185,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   but: {
-    backgroundColor: "#ff5252",
+    backgroundColor: "#068f13",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     marginTop: 20,
   },
   butText: {
     color: "white",
     marginLeft: 10,
+ 
   },
   signupContainer: {
     marginTop: 20,
     alignItems: "center",
+    borderRadius:20,
   },
   signupText: {
     color: "gray",
