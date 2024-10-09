@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export default function VehicleDetailsForm({ setVehicleData }) {
   const [model, setModel] = useState('');
@@ -16,19 +16,23 @@ export default function VehicleDetailsForm({ setVehicleData }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleImagePick = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status === 'granted') {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+    const options = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 300,
+      quality: 1,
+    };
 
-      if (!result.cancelled) {
-        setImages([...images, result.uri]);
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorCode);
+      } else {
+        const selectedImage = response.assets[0].uri; // Access the first selected image's URI
+        setImages([...images, selectedImage]);
       }
-    }
+    });
   };
 
   const handleSubmit = () => {
@@ -150,7 +154,6 @@ export default function VehicleDetailsForm({ setVehicleData }) {
             {isSubmitted ? 'Saved Successfully' : 'Save'}
           </Text>
         </TouchableOpacity>
-
       </View>
     </ScrollView>
   );
@@ -165,8 +168,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#6f5ef1",
     padding: 20,
-    marginTop:20,
-    alignSelf:"center"
+    marginTop: 20,
+    alignSelf: "center"
   },
   header: {
     fontSize: 24,
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 20,
-    backgroundColor:""
+    backgroundColor: ""
   },
   inputLabel: {
     fontSize: 16,
@@ -189,7 +192,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   image: {
- width: 100,
+    width: 100,
     height: 100,
     borderRadius: 10,
     marginBottom: 10,
@@ -204,27 +207,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-
-    headerContainer: {
-        backgroundColor: '#A6C7FF',
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        marginBottom: 20,
-        width: '100%',
-        alignItems: 'center',
-    },
-    headerText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'black',
-    },
-    formContainer: {
-        backgroundColor: '#F1F3FB',
-        borderRadius: 10,
-        padding: 20,
-        width: '100%',
-        borderWidth:2,
-        borderColor:"#6f5ef1"
-    },
 });
