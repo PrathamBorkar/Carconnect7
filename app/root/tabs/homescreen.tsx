@@ -54,10 +54,11 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('sell')}>
           <Image source={require('../../assets/images/sell.png')} style={styles.gridIconFull} />
         </TouchableOpacity>
-s
+
         <TouchableOpacity style={styles.gridItem} onPress={() => router.push('/root/tabs/Buy/b1')}>
-          <Image source={require('../../assets/images/BUY.png')} style={styles.gridIconFull} />
-        </TouchableOpacity>
+  <Image source={require('../../assets/images/BUY.png')} style={styles.gridIconFull} />
+</TouchableOpacity>
+
 
         <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('RentCar')}>
           <Image source={require('../../assets/images/rent.png')} style={styles.gridIconFull} />
