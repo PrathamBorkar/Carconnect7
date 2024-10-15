@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Image, ScrollView, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
+import { Image, ScrollView, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal } from "react-native";
 import { useRouter } from "expo-router";
 
 const SignUp = () => {
@@ -7,6 +7,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
 
   const [nameVerify, setNameVerify] = useState(false);
   const [emailVerify, setEmailVerify] = useState(false);
@@ -14,6 +15,7 @@ const SignUp = () => {
   const [passwordVerify, setPasswordVerify] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [showOtpModal, setShowOtpModal] = useState(false);
 
   const router = useRouter();
 
@@ -39,12 +41,72 @@ const SignUp = () => {
     setPasswordVerify(text.length >= 6);
   };
 
-  const onSignUpPress = async () => {
+  const sendOtp = async () => {
     if (!nameVerify || !emailVerify || !mobileVerify || !passwordVerify) {
       setSuccessMessage("Please fill all fields correctly.");
       return;
     }
 
+    setLoading(true);
+    setSuccessMessage('');
+
+    try {
+      const response = await fetch("http://localhost:8082/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setSuccessMessage("OTP sent successfully!");
+        setShowOtpModal(true);
+      } else {
+        setSuccessMessage(data.error || "Failed to send OTP.");
+      }
+    } catch (error) {
+      setSuccessMessage("Failed to connect to the server.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    if (!otp) {
+      setSuccessMessage("Please enter the OTP.");
+      return;
+    }
+
+    setLoading(true);
+    setSuccessMessage('');
+
+    try {
+      const response = await fetch("http://localhost:8082/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ otp }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setSuccessMessage("OTP verified successfully!");
+        setShowOtpModal(false);
+        registerUser();
+      } else {
+        setSuccessMessage(data.error || "Invalid OTP.");
+      }
+    } catch (error) {
+      setSuccessMessage("Failed to connect to the server.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const registerUser = async () => {
     setLoading(true);
     setSuccessMessage('');
 
@@ -58,7 +120,7 @@ const SignUp = () => {
           name,
           email,
           mobile,
-          password, // Send the password as is (no hashing)
+          password,
         }),
       });
 
@@ -66,10 +128,9 @@ const SignUp = () => {
       if (data.status === "ok") {
         setSuccessMessage("User created successfully!");
         
-        // Navigate to the Sign In page
         setTimeout(() => {
-          router.push("/auth/sing-in"); // Correct path to Sign In page
-        }, 2000); // Delay to show success message
+          router.push("/auth/sing-in");
+        }, 2000);
       } else {
         setSuccessMessage(data.data || "Something went wrong.");
       }
@@ -100,6 +161,7 @@ const SignUp = () => {
               borderColor: "#ccc",
               padding: 10,
               marginBottom: 10,
+              borderRadius:10
             }}
           />
           {!nameVerify && name.length > 0 && (
@@ -116,6 +178,7 @@ const SignUp = () => {
               borderColor: "#ccc",
               padding: 10,
               marginBottom: 10,
+              borderRadius:10
             }}
           />
           {!mobileVerify && mobile.length > 0 && (
@@ -131,6 +194,7 @@ const SignUp = () => {
               borderColor: "#ccc",
               padding: 10,
               marginBottom: 10,
+              borderRadius:10
             }}
           />
           {!emailVerify && email.length > 0 && (
@@ -147,28 +211,27 @@ const SignUp = () => {
               borderColor: "#ccc",
               padding: 10,
               marginBottom: 20,
+              borderRadius:10
             }}
           />
           {!passwordVerify && password.length > 0 && (
             <Text style={{ color: "red", marginBottom: 20 }}>Password should be at least 6 characters long.</Text>
           )}
 
-          {loading ? (
-            <ActivityIndicator size="large" color="#6200ee" />
-          ) : (
-            <TouchableOpacity
-              onPress={onSignUpPress}
-              style={{
-                backgroundColor: "#1a75ff",
-                padding: 15,
-                borderRadius: 50,
-                alignItems: "center",
-                marginTop: 20,
-              }}
-            >
-              <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>Sign Up</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            onPress={sendOtp}
+            style={{
+              backgroundColor: "#1a75ff",
+              padding: 15,
+              borderRadius: 50,
+              alignItems: "center",
+              marginTop: 20,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>Sign Up</Text>
+          </TouchableOpacity>
+
+          {loading && <ActivityIndicator size="large" color="#6200ee" style={{ marginTop: 20 }} />}
 
           {successMessage ? (
             <Text style={{ color: successMessage.includes("Success") ? "green" : "red", marginTop: 20, textAlign: "center" }}>
@@ -177,6 +240,43 @@ const SignUp = () => {
           ) : null}
         </View>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showOtpModal}
+        onRequestClose={() => setShowOtpModal(false)}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 15 }}>Enter OTP</Text>
+            <TextInput
+              placeholder="Enter OTP"
+              value={otp}
+              onChangeText={setOtp}
+              keyboardType="numeric"
+              style={{
+                borderWidth: 1,
+                borderColor: "#ccc",
+                padding: 10,
+                marginBottom: 20,
+                borderRadius: 5,
+              }}
+            />
+            <TouchableOpacity
+              onPress={verifyOtp}
+              style={{
+                backgroundColor: "#1a75ff",
+                padding: 15,
+                borderRadius: 50,
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>Verify OTP</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
