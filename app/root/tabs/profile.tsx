@@ -3,7 +3,8 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { useRouter } from 'expo-router';
+const router=useRouter();
 const Profile = () => {
   const [userData, setUserData] = useState(null);
 
@@ -56,9 +57,15 @@ const Profile = () => {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton}>
-        <Text style={styles.logoutText}>Logout</Text>
-      </TouchableOpacity>
+      <TouchableOpacity 
+  style={styles.logoutButton}  
+  onPress={async () => {
+    await AsyncStorage.removeItem('token'); // Clear the token
+    router.push('/auth/sing-in'); // Navigate to sign-in
+  }}>
+  <Text style={styles.logoutText}>Logout</Text>
+</TouchableOpacity>
+
     </View>
   );
 };

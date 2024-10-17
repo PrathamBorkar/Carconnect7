@@ -6,6 +6,7 @@ import Swiper from 'react-native-swiper'; // Import Swiper for auto image slider
 import sell from './sell';
 import Buy from "./Buy";
 import BuyCar from './Buy/b1';
+import HomeRent from './Rent';
 import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
@@ -60,7 +61,7 @@ export default function HomeScreen() {
 </TouchableOpacity>
 
 
-        <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('RentCar')}>
+        <TouchableOpacity style={styles.gridItem} onPress={() => router.push('/root/tabs/Rent/homerent')}>
           <Image source={require('../../assets/images/rent.png')} style={styles.gridIconFull} />
         </TouchableOpacity>
 

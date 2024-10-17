@@ -102,9 +102,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#555',
     marginBottom: 5,
+    fontWeight:'bold',
   },
   value: {
     fontSize: 16,

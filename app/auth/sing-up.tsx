@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, ScrollView, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal } from "react-native";
+import { Image, ScrollView, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Modal,StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
 const SignUp = () => {
@@ -152,71 +152,88 @@ const SignUp = () => {
         </View>
 
         <View style={{ padding: 20 }}>
-          <TextInput
-            placeholder="Enter name"
-            value={name}
-            onChangeText={handleName}
-            style={{
-              borderBottomWidth: 1,
-              borderColor: "#ccc",
-              padding: 10,
-              marginBottom: 10,
-              borderRadius:10
-            }}
-          />
-          {!nameVerify && name.length > 0 && (
-            <Text style={{ color: "red", marginBottom: 20 }}>Name should be at least 2 characters long.</Text>
-          )}
+  {/* Name Input */}
+  <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Name</Text>
+  <TextInput
+    placeholder="Enter name"
+    value={name}
+    onChangeText={handleName}
+    style={{
+      borderBottomWidth: 1,
+      borderColor: "#ccc",
+      padding: 10,
+      marginBottom: 13,
+      borderRadius: 10,
+      backgroundColor:"#d8d7d9"
+    }}
+  />
+  {!nameVerify && name.length > 0 && (
+    <Text style={{ color: "red", marginBottom: 20 }}>Name should be at least 2 characters long.</Text>
+  )}
 
-          <TextInput
-            placeholder="Enter mobile number"
-            value={mobile}
-            onChangeText={handleMobile}
-            keyboardType="numeric"
-            style={{
-              borderBottomWidth: 1,
-              borderColor: "#ccc",
-              padding: 10,
-              marginBottom: 10,
-              borderRadius:10
-            }}
-          />
-          {!mobileVerify && mobile.length > 0 && (
-            <Text style={{ color: "red", marginBottom: 20 }}>Mobile number must be exactly 10 digits long.</Text>
-          )}
+  {/* Mobile Number Input */}
+  <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Mobile Number</Text>
+  <TextInput
+    placeholder="Enter mobile number"
+    value={mobile}
+    onChangeText={handleMobile}
+    keyboardType="numeric"
+    style={{
+      borderBottomWidth: 1,
+      borderColor: "#ccc",
+      padding: 10,
+      marginBottom: 10,
+      borderRadius: 10,
+      backgroundColor:"#d8d7d9"
 
-          <TextInput
-            placeholder="Enter email"
-            value={email}
-            onChangeText={handleEmail}
-            style={{
-              borderBottomWidth: 1,
-              borderColor: "#ccc",
-              padding: 10,
-              marginBottom: 10,
-              borderRadius:10
-            }}
-          />
-          {!emailVerify && email.length > 0 && (
-            <Text style={{ color: "red", marginBottom: 20 }}>Enter a valid email address.</Text>
-          )}
+    }}
+  />
+  {!mobileVerify && mobile.length > 0 && (
+    <Text style={{ color: "red", marginBottom: 20 }}>Mobile number must be exactly 10 digits long.</Text>
+  )}
 
-          <TextInput
-            placeholder="Enter password"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={handlePassword}
-            style={{
-              borderBottomWidth: 1,
-              borderColor: "#ccc",
-              padding: 10,
-              marginBottom: 20,
-              borderRadius:10
-            }}
-          />
-          {!passwordVerify && password.length > 0 && (
-            <Text style={{ color: "red", marginBottom: 20 }}>Password should be at least 6 characters long.</Text>
-          )}
+  {/* Email Input */}
+  <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Email</Text>
+  <TextInput
+    placeholder="Enter email"
+    value={email}
+    onChangeText={handleEmail}
+    style={{
+      borderBottomWidth: 1,
+      borderColor: "#ccc",
+      padding: 10,
+      marginBottom: 10,
+      borderRadius: 10,
+      backgroundColor:"#d8d7d9"
+
+    }}
+  />
+  {!emailVerify && email.length > 0 && (
+    <Text style={{ color: "red", marginBottom: 20 }}>Enter a valid email address.</Text>
+  )}
+
+  {/* Password Input */}
+  <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Password</Text>
+  <TextInput
+    placeholder="Enter password"
+    secureTextEntry={true}
+    value={password}
+    onChangeText={handlePassword}
+    style={{
+      borderBottomWidth: 1,
+      borderColor: "#ccc",
+      padding: 10,
+      marginBottom: 20,
+      borderRadius: 10,
+      backgroundColor:"#d8d7d9"
+
+    }}
+  />
+  {!passwordVerify && password.length > 0 && (
+    <Text style={{ color: "red", marginBottom: 20 }}>Password should be at least 6 characters long.</Text>
+  )}
+
+
 
           <TouchableOpacity
             onPress={sendOtp}
@@ -239,6 +256,16 @@ const SignUp = () => {
             </Text>
           ) : null}
         </View>
+
+        <View style={styles.signupContainer}>
+          <Text style={styles.signupText}>
+            Already have an account?{" "}
+            <TouchableOpacity onPress={() => router.push("/auth/sing-in")}>
+              <Text style={styles.signupLink}>Sign in</Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
+
       </View>
 
       <Modal
@@ -281,4 +308,18 @@ const SignUp = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  signupContainer: {
+    marginTop: 20,
+    alignItems: "center",
+    borderRadius:20,
+  },
+  signupText: {
+    color: "gray",
+  },
+  signupLink: {
+    color: "#1a75ff",
+    fontWeight: "bold",
+  },
+})
 export default SignUp;
